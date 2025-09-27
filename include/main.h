@@ -1,8 +1,7 @@
-#ifdef MAIN_H
+#ifndef MAIN_H
 #define MAIN_H
 
-#define GPIO_ADD x7e200000
-
+#include <linux/init.h>
 
 
 #endif
