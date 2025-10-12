@@ -40,19 +40,23 @@ static int controler_init(void){
 }
 
 void set_pin_to_output(void){
-    unsigned int * ptr = (unsigned int *) GPIO_BASE + GPFSEL0;
+    unsigned int * ptr = (unsigned int *) (GPIO_BASE + GPFSEL0);
 
     (*ptr) &= ~(0b111 << 6); /// clear 3 bit
     (*ptr) |= (0b001 << 6); /// Set the value
 }
 
 void set_output(bool state){
-    unsigned int * ptr = (unsigned int *) GPIO_BASE + GPSET0;
-    if(state){
-        *(ptr) |= (0b1 << 2);
-    }else {
-        *(ptr) &= ~(0b1 << 2);
+
+    if(state) {
+        unsigned int * ptr = (unsigned int *) (GPIO_BASE + GPSET0);
+        *(ptr) = (0b1 << 2);
     }
+    else {
+        unsigned int * ptr = (unsigned int *) (GPIO_BASE + GPCLR0);
+        *(ptr) = (0b1 << 2);
+    }
+    
 }
 
 static void controler_exit(void){
