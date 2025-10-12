@@ -20,15 +20,11 @@ static int controler_init(void){
     printk(KERN_ALERT "Controler gpio up\n");
     printk(KERN_INFO "The process is \"%s\" (pid %i)\n", current->comm, current->pid);
 
-    /// Reservation de l'acces physique
+    GPIO_BASE = ioremap(GPIO_BASE_PHYS, GPIO_SIZE); /// reservation de l'adresse physique
 
-    GPIO_BASE = ioremap(GPIO_BASE_PHYS, GPIO_SIZE);
-
-    if(GPIO_BASE)
-    {
+    if(GPIO_BASE) { // est ce que la réservation a bien eu lieu ?
         printk(KERN_INFO "plage adresse GPIO reserved\n");
-    }
-    else {
+    } else {
         printk(KERN_ERR "Erreur ioremap\n");
         return -ENOMEM;
     }
@@ -41,13 +37,11 @@ static int controler_init(void){
 
 void set_pin_to_output(void){
     unsigned int * ptr = (unsigned int *) (GPIO_BASE + GPFSEL0);
-
     (*ptr) &= ~(0b111 << 6); /// clear 3 bit
-    (*ptr) |= (0b001 << 6); /// Set the value
+    (*ptr) |= (0b001 << 6); /// set the value
 }
 
 void set_output(bool state){
-
     if(state) {
         unsigned int * ptr = (unsigned int *) (GPIO_BASE + GPSET0);
         *(ptr) = (0b1 << 2);
@@ -56,17 +50,15 @@ void set_output(bool state){
         unsigned int * ptr = (unsigned int *) (GPIO_BASE + GPCLR0);
         *(ptr) = (0b1 << 2);
     }
-    
 }
 
 static void controler_exit(void){
-
     set_output(false);
+
     printk(KERN_INFO "Liberation de la plage d'adresse GPIO");
-    if (GPIO_BASE){
+    if (GPIO_BASE){ /// ne pas oublier de libéré la reservation
         iounmap(GPIO_BASE);
     }
-
     printk(KERN_ALERT "Controler gpio down\n");
 }
 
