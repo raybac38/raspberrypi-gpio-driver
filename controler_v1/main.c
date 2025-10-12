@@ -4,8 +4,8 @@
 
 MODULE_LICENSE("MIT");
 
-#define GPIO_BASE_PHYS 0x7e200000
-#define GPIO_SIZE 0xf4
+#define GPIO_BASE_PHYS 0xFE200000
+#define GPIO_SIZE 0xF4
 
 volatile unsigned char * GPIO_BASE;
 
@@ -13,6 +13,8 @@ volatile unsigned char * GPIO_BASE;
 #define GPSET0   0x1c
 #define GPCLR0   0x28
 
+void set_pin_to_output(void);
+void set_output(bool state);
 
 static int controler_init(void){
     printk(KERN_ALERT "Controler gpio up\n");
